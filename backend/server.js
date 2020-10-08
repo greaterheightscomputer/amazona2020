@@ -1,6 +1,5 @@
 import express from 'express';
 import path from 'path';  
-// import data from './data';
 import config from './config';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
@@ -9,7 +8,6 @@ import productRoute from './routes/productRoute';
 import orderRoute from './routes/orderRoute';
 
 const mongodbUrl = config.MONGODB_URL;  
-// const port = process.env.PORT || 5000;   //heroku use this process.env.PORT to generate dynamic port number and server up the public or frontend asset to browser while port 5000 is to server up the public asset on the local machine             
 
 mongoose.connect(mongodbUrl, { 
     useNewUrlParser: true,    
@@ -46,5 +44,4 @@ app.get("/api/config/paypal", (req, res) => { //route for payment
 app.use(express.static(path.join(__dirname, '/../frontend/build'))); //the path to serve up our public OR frontend asset when deployed 
 app.get('*', (req, res) => res.sendFile(path.join(`${__dirname}/../frontend/build/index.html`))); //All the request made by user render on the index.html page beco's it is the root page where all pages render and when a bad request is made the index.html render instead of the render error 404
 
-// app.listen(port, () =>{console.log("Server started at http://localhost:5000")} )
 app.listen(config.PORT, () =>{console.log("Server started at http://localhost:5000")})
