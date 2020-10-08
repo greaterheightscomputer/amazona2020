@@ -1,0 +1,17 @@
+//Define a setting for presets
+// {
+//     "presets":[
+//         [
+//             "@babel/preset-env"   //by having this setting i can run the node project and ES6 code
+//         ]
+//     ]
+// }
+
+{
+    "presets": [
+        [
+            "@babel/preset-env",
+            {"targets": {"node": "current"}}
+        ]
+    ]
+}
