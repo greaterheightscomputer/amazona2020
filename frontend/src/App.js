@@ -1,4 +1,4 @@
-//Deploying or publishing the web application to GitHub and Heroku which is a cloud server for hosting web application.
+//Implementing rating system
 
 import React from 'react';
 import { BrowserRouter, Route, Link } from 'react-router-dom';

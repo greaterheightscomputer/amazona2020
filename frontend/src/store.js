@@ -1,10 +1,10 @@
 import { createStore, combineReducers, compose, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import Cookie from 'js-cookie';
-import { productListReducer, productDetailsReducer } from './reducers/productReducers';
+import { productListReducer, productDetailsReducer, productSaveReducer, 
+         productDeleteReducer, productReviewSaveReducer } from './reducers/productReducers';
 import { cartReducer } from './reducers/cartReducers';
 import { userSigninReducer, userRegisterReducer, userUpdateReducer } from './reducers/userReducers';
-import { productSaveReducer, productDeleteReducer } from './reducers/productReducers';
 import { myOrderListReducer, orderCreateReducer, orderDetailReducer, orderPayReducer, orderListReducer, orderDeleteReducer } from './reducers/orderReducers';
 
 const cartItems = Cookie.getJSON("cartItems") || [];  //fetching of cookie                                  
@@ -25,7 +25,8 @@ const reducer = combineReducers({
     userUpdate: userUpdateReducer,
     myOrderList: myOrderListReducer,
     orderList: orderListReducer,
-    orderDelete: orderDeleteReducer
+    orderDelete: orderDeleteReducer,
+    productReviewSave: productReviewSaveReducer
 })
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose; //its will enable us to view dispatched action in the Redux store on the browser 

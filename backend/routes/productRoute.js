@@ -6,8 +6,8 @@ const router = express.Router();
 
 router.get("/", async(req, res) => { //creating route for getting list of all products
     const category = req.query.category ? { category: req.query.category } : {};
-    console.log('Category: ',category)  
-    console.log('req: ',req.query)    
+    // console.log('Category: ',category)  
+    // console.log('req: ',req.query)    
     const searchKeyword = req.query.searchKeyword ? {
         name: {
             $regex: req.query.searchKeyword,
@@ -18,7 +18,7 @@ router.get("/", async(req, res) => { //creating route for getting list of all pr
     const sortOrder = req.query.sortOrder ?
         (req.query.sortOrder === 'lowest' ? { price: 1 } : { price:-1 })
         : { _id: -1 }; 
-    console.log('OrderBy: ',sortOrder) //if sortOrder is empty the sortOrder will be base on _id: -1
+    // console.log('OrderBy: ',sortOrder) //if sortOrder is empty the sortOrder will be base on _id: -1
 
     const products = await Product.find({ ...category, ...searchKeyword }).sort(sortOrder);
     res.send(products);

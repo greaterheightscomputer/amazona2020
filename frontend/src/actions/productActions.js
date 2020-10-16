@@ -1,7 +1,8 @@
 import { PRODUCT_LIST_REQUEST, PRODUCT_LIST_FAIL, PRODUCT_LIST_SUCCESS, 
         PRODUCT_DETAILS_REQUEST, PRODUCT_DETAILS_SUCCESS, PRODUCT_DETAILS_FAIL,
         PRODUCT_SAVE_REQUEST, PRODUCT_SAVE_SUCCESS, PRODUCT_SAVE_FAIL,
-        PRODUCT_DELETE_REQUEST, PRODUCT_DELETE_SUCCESS, PRODUCT_DELETE_FAIL } from "../constants/productConstants";
+        PRODUCT_DELETE_REQUEST, PRODUCT_DELETE_SUCCESS, PRODUCT_DELETE_FAIL, 
+        PRODUCT_REVIEW_SAVE_REQUEST, PRODUCT_REVIEW_SAVE_SUCCESS, PRODUCT_REVIEW_SAVE_FAIL } from "../constants/productConstants";
 import Axios from "axios";
 
 const listProducts = (category='', searchKeyword='', sortOrder='') => async (dispatch) => { //listProduct is an action function that return another async function with dispatch as an argument    
@@ -66,4 +67,21 @@ const deleteProduct = (productId) => async (dispatch, getState) =>{
     }
 }
 
-export { listProducts, detailsProduct, saveProduct, deleteProduct };
+const saveProductReview = (productId, review) => async(dispatch, getState)=>{
+    try{
+        const {userSignin:{userInfo:{token}}} = getState();
+        dispatch({ type: PRODUCT_REVIEW_SAVE_REQUEST, payload: review });
+        //sending an ajax request or http request. 
+        const { data } = await Axios.post(`/api/products/${productId}/reviews`, review, 
+            {
+                headers: {
+                    Authorization: 'Bearer ' + token,
+                }
+            }); //axios.post() as three arguments 1st is the address or url or end-point, 2nd is the body or data sending to the backend, 3rd is the header in order to authenticate or make sure that the sure performing review already sign-in
+            dispatch({ type: PRODUCT_REVIEW_SAVE_SUCCESS, payload: data});
+    }catch(error){ 
+        dispatch({ type: PRODUCT_REVIEW_SAVE_FAIL, payload: error.message });
+    }
+}
+
+export { listProducts, detailsProduct, saveProduct, deleteProduct, saveProductReview };
