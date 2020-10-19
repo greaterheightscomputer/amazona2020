@@ -14,7 +14,7 @@ router.get("/", async(req, res) => { //creating route for getting list of all pr
             $options: 'i'
         }
     } : {};
-    console.log('SearchKeyword: ',searchKeyword)
+    // console.log('SearchKeyword: ',searchKeyword)
     const sortOrder = req.query.sortOrder ?
         (req.query.sortOrder === 'lowest' ? { price: 1 } : { price:-1 })
         : { _id: -1 }; 
@@ -81,6 +81,29 @@ router.delete("/:id", isAuth, isAdmin, async(req, res)=>{
     }else{
         res.send("Error in Deletion.");
     }
+});
+
+router.post("/:id/reviews", isAuth, async(req, res)=>{
+    const product = await Product.findById(req.params.id);
+    if(product){
+        const review = {
+            name: req.body.name,
+            rating: Number(req.body.rating),
+            comment: req.body.comment
+        };
+        product.reviews.push(review); //save the new value inside product.reviews array in mongodb
+        //need to update two properties of product object which are numReviews and rating
+        product.numReviews = product.reviews.length;  //length of the reviews array object
+        product.rating = product.reviews.reduce((a, c)=>a + c.rating, 0)/product.reviews.length;  //its return average rating
+        const updatedProduct = await product.save();        
+        // console.log(updatedProduct)
+        res.status(201).send({
+            data: updatedProduct.reviews[updatedProduct.reviews.length-1],            
+            message: 'Review saved successfully.'            
+        });
+    }else{
+        res.status(404).send({message: 'Product Not Found.'});        
+    }    
 });
 
 export default router;
