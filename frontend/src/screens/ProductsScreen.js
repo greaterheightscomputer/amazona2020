@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { saveProduct, listProducts, deleteProduct } from '../actions/productActions';
@@ -11,9 +12,8 @@ function ProductsScreen(props){
     const [brand, setBrand] = useState('');
     const [category, setCategory] = useState('');
     const [countInStock, setCountInStock] = useState('');
-    const [description, setDescription] = useState('');
-    // const [rating, setRating] = useState('');
-    // const [numReviews, setNumReviews] = useState('');
+    const [description, setDescription] = useState('');   
+    const [uploading, setUploading] = useState(false);
     const productSave = useSelector(state => state.productSave);
     const { loading: loadingSave, success: successSave, error: errorSave } = productSave; 
     
@@ -49,10 +49,28 @@ function ProductsScreen(props){
     const submitHandler = (e) => {
         e.preventDefault();
         dispatch(saveProduct({_id:id, name, price, image, brand, category, countInStock, description}));
-    }
+    };
     
     const deleteHandler = (product) =>{
         dispatch(deleteProduct(product._id));
+    };
+
+    const uploadFileHandler = (e) =>{
+        const file = e.target.files[0];  //files[0] means its take one single file at a time
+        const bodyFormData = new FormData();
+        bodyFormData.append('image', file); //'image' is a filename 
+        setUploading(true); //its will show loading bar like this <div>Loading...</div> while its processing the http or ajax request
+        axios.post('/api/uploads', bodyFormData, {
+            headers:{
+                'Content-Type': 'multipart/form-data',
+            }
+        }).then((response)=>{
+            setImage(response.data);
+            setUploading(false);
+        }).catch((error)=>{
+            console.log(error);
+            setUploading(false);
+        })
     }
 
     return <div className="content content-margined">
@@ -87,6 +105,8 @@ function ProductsScreen(props){
                         <li>
                             <label htmlFor="image">Image</label>
                             <input type="text" name="image" id="image" value={image} onChange={(e) =>setImage(e.target.value)} />
+                            <input type="file" onChange={uploadFileHandler}/>
+                            {uploading && <div>Uploading...</div>}
                         </li>
                         <li>
                             <label htmlFor="brand">Brand</label>
@@ -99,17 +119,7 @@ function ProductsScreen(props){
                         <li>
                             <label htmlFor="category">Category</label>
                             <input type="text" name="category" id="category" value={category} onChange={(e) =>setCategory(e.target.value)} />
-                        </li>
-                        {
-                            /*<li>
-                            <label htmlFor="rating">Rating</label>
-                            <input type="text" name="rating" id="rating" onChange={(e) =>setRating(e.target.value)} />
-                        </li>
-                        <li>
-                            <label htmlFor="numReviews">Num Reviews</label>
-                            <input type="text" name="numReviews" id="numReviews" onChange={(e) =>setNumReviews(e.target.value)} />
-                        </li> their is know need for rating and numReview becos they will enter automatically from the new comment from the server */
-                        }
+                        </li>                        
                         <li>
                             <label htmlFor="description">Description</label>
                             <textarea type="text" name="description" id="description" value={description} onChange={(e) =>setDescription(e.target.value)} ></textarea>

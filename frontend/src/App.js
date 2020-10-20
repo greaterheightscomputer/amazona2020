@@ -1,4 +1,4 @@
-//Implementing rating system
+//Uploading Product Images on local server of your system through the admin section of the app
 
 import React from 'react';
 import { BrowserRouter, Route, Link } from 'react-router-dom';

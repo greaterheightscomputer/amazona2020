@@ -98,7 +98,7 @@ router.post("/:id/reviews", isAuth, async(req, res)=>{
         const updatedProduct = await product.save();        
         // console.log(updatedProduct)
         res.status(201).send({
-            data: updatedProduct.reviews[updatedProduct.reviews.length-1],            
+            data: updatedProduct.reviews[updatedProduct.reviews.length-1], //[updatedProduct.reviews.length-1] means return or send the last item or element inside updatedProduct.reviews on the Network           
             message: 'Review saved successfully.'            
         });
     }else{
