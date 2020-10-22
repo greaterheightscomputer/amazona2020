@@ -19,24 +19,23 @@ router.get("/", async (req, res) => {
   //creating route for getting list of all products
   const category = req.query.category ? {
     category: req.query.category
-  } : {};
-  console.log('Category: ', category);
-  console.log('req: ', req.query);
+  } : {}; // console.log('Category: ',category)  
+  // console.log('req: ',req.query)    
+
   const searchKeyword = req.query.searchKeyword ? {
     name: {
       $regex: req.query.searchKeyword,
       $options: 'i'
     }
-  } : {};
-  console.log('SearchKeyword: ', searchKeyword);
+  } : {}; // console.log('SearchKeyword: ',searchKeyword)
+
   const sortOrder = req.query.sortOrder ? req.query.sortOrder === 'lowest' ? {
     price: 1
   } : {
     price: -1
   } : {
     _id: -1
-  };
-  console.log('OrderBy: ', sortOrder); //if sortOrder is empty the sortOrder will be base on _id: -1
+  }; // console.log('OrderBy: ',sortOrder) //if sortOrder is empty the sortOrder will be base on _id: -1
 
   const products = await _productModel.default.find({ ...category,
     ...searchKeyword
@@ -122,6 +121,35 @@ router.delete("/:id", _util.isAuth, _util.isAdmin, async (req, res) => {
     });
   } else {
     res.send("Error in Deletion.");
+  }
+});
+router.post("/:id/reviews", _util.isAuth, async (req, res) => {
+  const product = await _productModel.default.findById(req.params.id);
+
+  if (product) {
+    const review = {
+      name: req.body.name,
+      rating: Number(req.body.rating),
+      comment: req.body.comment
+    };
+    product.reviews.push(review); //save the new value inside product.reviews array in mongodb
+    //need to update two properties of product object which are numReviews and rating
+
+    product.numReviews = product.reviews.length; //length of the reviews array object
+
+    product.rating = product.reviews.reduce((a, c) => a + c.rating, 0) / product.reviews.length; //its return average rating
+
+    const updatedProduct = await product.save(); // console.log(updatedProduct)
+
+    res.status(201).send({
+      data: updatedProduct.reviews[updatedProduct.reviews.length - 1],
+      //[updatedProduct.reviews.length-1] means return or send the last item or element inside updatedProduct.reviews on the Network           
+      message: 'Review saved successfully.'
+    });
+  } else {
+    res.status(404).send({
+      message: 'Product Not Found.'
+    });
   }
 });
 var _default = router;
