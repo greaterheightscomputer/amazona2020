@@ -60,7 +60,7 @@ function ProductsScreen(props){
         const bodyFormData = new FormData();
         bodyFormData.append('image', file); //'image' is a filename 
         setUploading(true); //its will show loading bar like this <div>Loading...</div> while its processing the http or ajax request
-        axios.post('/api/uploads', bodyFormData, {
+        axios.post('/api/uploads/s3', bodyFormData, {
             headers:{
                 'Content-Type': 'multipart/form-data',
             }

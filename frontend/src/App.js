@@ -1,4 +1,4 @@
-//Uploading Product Images on local server of your system through the admin section of the app
+//Uploading Product Images on (Amazon Web Services) AWS S3 cloud server through the admin section of the app
 
 import React from 'react';
 import { BrowserRouter, Route, Link } from 'react-router-dom';
@@ -50,10 +50,10 @@ function App() {
                     { userInfo && userInfo.isAdmin && (
                         <div className="dropdown">
                             <a href="#" >Admin</a>
-                            <ul className="dropdown-content">
-                                <li>
-                                    <Link to="/orders">Orders</Link>
-                                    <Link to="/productsList">Products</Link>
+                            <ul className="dropdown-content">                                
+                                <li>                                    
+                                    <Link to="/orders" className="dropdown-menu">Orders</Link>
+                                    <Link to="/productsList" className="dropdown-menu">Products</Link>
                                 </li>
                             </ul>
                         </div>                        

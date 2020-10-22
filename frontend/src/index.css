@@ -401,11 +401,11 @@ tbody>tr:nth-child(odd){
 
 /*admin*/
 .dropdown{
-  display: inline-block;
-  position: relative;
+  display: inline-flex;
+  position: relative; 
 }
-.dropdown-content{
-  position: absolute;
+.dropdown-content{  
+  position: absolute; 
   display: none;
   right: 0;
   padding: 1rem;
@@ -413,11 +413,15 @@ tbody>tr:nth-child(odd){
   z-index: 1;
   background-color:#203040;
   margin:0rem;
-  margin-top:0.4rem;
+  margin-top:1.5rem;  
 }
 .dropdown:hover .dropdown-content{
   display: block;
 }
+.dropdown-menu{
+  display: block;
+  padding: .6rem;
+}  
 
 /*filter*/
 .filter{
